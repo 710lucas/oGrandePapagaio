@@ -1,8 +1,10 @@
 package src;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Usuario {
+//so precisa do implements Serializable se for salvar em arquivo, o que não é necessário
+public class Usuario implements Serializable {
 
     private ArrayList<Post> postagens = new ArrayList<>();
 

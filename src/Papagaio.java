@@ -1,10 +1,16 @@
 package src;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Papagaio {
+//so precisa do implements Serializable se for salvar em arquivo, o que não é necessário
+public class Papagaio implements Serializable{
 
+
+    private final String PAPAGAIO_ARQUIVO = "Papagaiagens.ppg";
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
+
 
     public void criarUsuario(String nome){
 
@@ -44,5 +50,30 @@ public class Papagaio {
 
         System.out.println("Nenhum usuario encontrado com este nome");
     }
+
+
+
+    //não é necessário mas eu quero salvar em arquivos então pode so ignorar isso
+    public Papagaio carregaPapagaios(){
+        try {
+            FileInputStream arquivoParaCarregar = new FileInputStream(new File(PAPAGAIO_ARQUIVO));
+            ObjectInputStream objetoParaCarregar = new ObjectInputStream(arquivoParaCarregar);
+            return (Papagaio) objetoParaCarregar.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            salvar();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void salvar(){
+        try {
+            FileOutputStream arquivoParaSalvar = new FileOutputStream(new File(PAPAGAIO_ARQUIVO));
+            ObjectOutputStream objetoParaSalvar = new ObjectOutputStream(arquivoParaSalvar);
+            objetoParaSalvar.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

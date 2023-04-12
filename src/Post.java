@@ -1,10 +1,10 @@
 package src;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
-public class Post {
+//so precisa do implements Serializable se for salvar em arquivo, o que não é necessário
+public class Post implements Serializable {
 
     private String texto;
     private Usuario autor;
