@@ -33,6 +33,11 @@ public class Usuario implements Serializable {
             return;
         }
 
+        if(seguindo.contains(usuario)){
+            System.out.println("Você já está seguindo este usuário");
+            return;
+        }
+
         seguindo.add(usuario);
     }
     public void postar(String texto){

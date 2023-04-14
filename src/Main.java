@@ -3,6 +3,7 @@ package src;
 import java.util.Scanner;
 
 public class Main {
+    public static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args){
 
@@ -12,7 +13,6 @@ public class Main {
         //o mesmo se aplica pro metodo .salvar();
         papa = papa.carregaPapagaios();
 
-        Scanner sc = new Scanner(System.in);
 
         final int LOGIN = 1;
         final int REGISTRAR = 2;
@@ -32,16 +32,11 @@ public class Main {
 
                 switch (escolha) {
                     case LOGIN:
-                        System.out.print("DIGITE SEU NOME DE USUARIO: ");
-                        nomeUsuario = sc.nextLine();
-                        usuario = papa.getUsuario(nomeUsuario);
+                        usuario = login(papa);
                         break;
 
                     case REGISTRAR:
-                        System.out.print("DIGITE SEU NOME DE USUARIO: ");
-                        nomeUsuario = sc.nextLine();
-                        if(papa.criarUsuario(nomeUsuario))
-                            usuario = papa.getUsuario(nomeUsuario);
+                        usuario = registrar(papa);
                         break;
 
                     case SAIR:
@@ -69,27 +64,16 @@ public class Main {
                 System.out.print("\n>");
                 input = sc.nextLine();
 
-                String[] palavras = input.split(" ");
+                String[] palavras = separaPalavras(input, " ");
 
                 if (palavras.length > 2 && palavras[1].equals("->")) {
-                    String nomeUsuario = palavras[0];
-                    if (papa.getUsuario(nomeUsuario) == null)
-                        continue;
-                    papa.postar(nomeUsuario, input.replace(palavras[0] + " " + palavras[1] + " ", ""));
-
+                    postar(input, papa);
 
                 } else if (palavras.length == 2 && palavras[0].equals("mural")) {
-                    String nomeUsuario = palavras[1];
-                    if (papa.getUsuario(nomeUsuario) == null)
-                        continue;
-                    papa.verMural(nomeUsuario);
-
+                    verMural(input, papa);
 
                 } else if (palavras.length == 3 && palavras[1].equals("segue")) {
-                    String quemVaiSeguir = palavras[0];
-                    String quemVaiSerSeguido = palavras[2];
-                    papa.seguir(quemVaiSeguir, quemVaiSerSeguido);
-
+                    seguir(input, papa);
 
                 } else if(input.equals("listar")){
                     papa.listarUsuarios();
@@ -119,5 +103,47 @@ public class Main {
 
         sc.close();
 
+    }
+
+
+    public static Usuario login(Papagaio papa){
+        System.out.print("DIGITE SEU NOME DE USUARIO: ");
+        String nomeUsuario = sc.nextLine();
+        return papa.getUsuario(nomeUsuario);
+    }
+
+    public static Usuario registrar(Papagaio papa){
+        System.out.print("DIGITE SEU NOME DE USUARIO: ");
+        String nomeUsuario = sc.nextLine();
+        if(!papa.criarUsuario(nomeUsuario))
+            return null;
+        return papa.getUsuario(nomeUsuario);
+    }
+
+    public static void postar(String input, Papagaio papa){
+        String[] palavras = separaPalavras(input, " ");
+        String nomeUsuario = palavras[0];
+        if (papa.getUsuario(nomeUsuario) == null)
+            return;
+        papa.postar(nomeUsuario, input.replace(palavras[0] + " " + palavras[1] + " ", ""));
+    }
+
+    public static void verMural(String input, Papagaio papa){
+        String[] palavras = separaPalavras(input, " ");
+        String nomeUsuario = palavras[1];
+        if (papa.getUsuario(nomeUsuario) == null)
+            return;
+        papa.verMural(nomeUsuario);
+    }
+
+    public static void seguir(String input, Papagaio papa){
+        String[] palavras = separaPalavras(input, " ");
+        String quemVaiSeguir = palavras[0];
+        String quemVaiSerSeguido = palavras[2];
+        papa.seguir(quemVaiSeguir, quemVaiSerSeguido);
+    }
+
+    public static String[] separaPalavras(String palavras, String separador){
+        return palavras.split(separador);
     }
 }
