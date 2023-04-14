@@ -55,14 +55,12 @@ public class Usuario implements Serializable {
     }
 
     public void lerPostagens(){
-        //Ver linha 11 do papagaio.java para entender esse for
         for(Post postagem : postagens){
             postagem.lerPostagem();
         }
     }
 
     public void lerPostagensSeguidores(){
-        //Ver linha 11 do papagaio.java para entender esse for
         for(Usuario usuario : seguindo){
             usuario.lerPostagens();
         }
