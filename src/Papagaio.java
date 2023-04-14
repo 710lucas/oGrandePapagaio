@@ -14,14 +14,9 @@ public class Papagaio implements Serializable{
 
     public boolean criarUsuario(String nome){
 
-        //mesma coisa que for(int i = 0; i<usuarios.getSize(); i++){
-        //Usuario usuario = usuarios.get(i);
-        //if(usuario.getNome()...
-        for(Usuario usuario : usuarios){
-            if(usuario.getNome().equals(nome)) {
-                System.out.println("Já existe um usuario com o mesmo nome, tente novamente");
-                return false;
-            }
+        if(getUsuario(nome) != null){
+            System.out.println("Usuario ja existe, tente outro nome");
+            return false;
         }
 
         if(nome.contains(" ")) {
