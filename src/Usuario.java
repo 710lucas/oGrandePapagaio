@@ -12,6 +12,8 @@ public class Usuario implements Serializable {
 
     private String nome;
 
+    private boolean logado = false;
+
     public Usuario(String nome){
         super();
         this.nome = nome;
@@ -19,12 +21,28 @@ public class Usuario implements Serializable {
     public String getNome(){
         return nome;
     }
+
     public void seguir(Usuario usuario){
-        if(!usuario.equals(this))
-            seguindo.add(usuario);
+        if(!logado){
+            System.out.println("Você precisa estar logado nessa conta para conseguir seguir alguem");
+            return;
+        }
+
+        if(usuario.equals(this)){
+            System.out.println("Você não pode seguir seu proprio usuário");
+            return;
+        }
+
+        seguindo.add(usuario);
     }
     public void postar(String texto){
+        if(!logado) {
+            System.out.println("Você precisa estar logado para conseguir postar nessa conta");
+            return;
+        }
+
         postagens.add(new Post(texto, this));
+        System.out.println("Postagem feita com sucesso");
     }
 
     public ArrayList<Post> getPostagens(){
@@ -50,4 +68,17 @@ public class Usuario implements Serializable {
         lerPostagensSeguidores();
     }
 
+    public void verSeguidores(){
+        for(Usuario usuario : seguindo){
+            System.out.println("Seguindo: "+usuario.getNome());
+        }
+    }
+
+    public boolean isLogado(){
+        return logado;
+    }
+
+    public void setLogado(boolean logado) {
+        this.logado = logado;
+    }
 }

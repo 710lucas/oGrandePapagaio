@@ -16,109 +16,106 @@ public class Main {
 
         final int LOGIN = 1;
         final int REGISTRAR = 2;
-
-
-        Usuario usuario = null;
-        do {
-            System.out.print("1 - LOGIN\n2 - REGISTRAR\n>");
-
-            //recebe String como input e converte para int
-            //evita colocar um nextInt e um nextLine feio embaixo
-            //acho menos confuso
-            int escolha = Integer.parseInt(sc.nextLine());
-            switch (escolha) {
-                case 1:
-                    System.out.print("DIGITE SEU NOME DE USUARIO: ");
-                    String nomeUsuario = sc.nextLine();
-                    usuario = papa.getUsuario(nomeUsuario);
-                    break;
-                case 2:
-                    System.out.print("DIGITE SEU NOME DE USUARIO: ");
-                    nomeUsuario = sc.nextLine();
-                    papa.criarUsuario(nomeUsuario);
-                    usuario = papa.getUsuario(nomeUsuario);
-                    break;
-                default:
-                    break;
-            }
-        } while(usuario == null);
-        System.out.println("Usuario "+usuario.getNome()+" te damos as boas vindas!");
-        System.out.println("Digite help para ver os comandos");
-
+        final int SAIR = 3;
         boolean sair  = false;
 
-        while(!sair){
-            System.out.print("\n>");
-            String input = sc.nextLine();
 
-            //separa as palavras por espaço
-            String[] palavras = input.split(" ");
+        while(!sair) {
+            Usuario usuario = null;
 
-            //caso a segunda palavra da lista seja ->
-            //sabemos que é uma postagem
-            if(palavras.length>2 && palavras[1].equals("->")){
-                //palavras[0] -> nome
-                //palavras[1] -> ->
-                //resto = texto da postagem
-                Usuario usuario1 =  null;
-                usuario1 = papa.getUsuario(palavras[0]);
-                if(usuario1 == null)
-                    continue;
+           while(usuario == null && !sair) {
+                System.out.print("1 - LOGIN\n2 - REGISTRAR\n3 - SAIR\n>");
 
-                //substitui, no comando original, o autor e o comando de postagem por uma string vazia
-                //exemplo:
-                //Daniel -> java 19 é massa
-                //vai virar
-                //java 19 é massa
-                //após substiruir "Daniel -> " por uma string vazia, basicamente apagando isso
-                usuario1.postar(input.replace(palavras[0]+" "+palavras[1]+" ", ""));
+                int escolha = Integer.parseInt(sc.nextLine());
+
+               String nomeUsuario;
+
+                switch (escolha) {
+                    case LOGIN:
+                        System.out.print("DIGITE SEU NOME DE USUARIO: ");
+                        nomeUsuario = sc.nextLine();
+                        usuario = papa.getUsuario(nomeUsuario);
+                        break;
+
+                    case REGISTRAR:
+                        System.out.print("DIGITE SEU NOME DE USUARIO: ");
+                        nomeUsuario = sc.nextLine();
+                        if(papa.criarUsuario(nomeUsuario))
+                            usuario = papa.getUsuario(nomeUsuario);
+                        break;
+
+                    case SAIR:
+                        sair = true;
+                        System.exit(0);
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
-            else if(palavras.length == 2 && palavras[0].equals("mural")){
-                //palavras[0] -> mural
-                //palavras[1] -> nome do usuario
-                Usuario usuario1 = null;
-                usuario1 = papa.getUsuario(palavras[1]);
-                if(usuario1 == null)
-                    continue;
-                usuario1.lerMural();
-            }
 
-            else if(palavras.length == 3 && palavras[1].equals("segue")){
-                //palavras[0] -> nome do usuario que vai seguir o outro
-                //palavras[1] -> segue
-                //palavras[2] -> nome do usuario que vai ser seguido
-                Usuario usuarioQueVaiSeguir = null;
-                usuarioQueVaiSeguir = papa.getUsuario(palavras[0]);
-                if(usuarioQueVaiSeguir == null)
-                    continue;
-                
-                Usuario usuarioQueVaiSerSeguido = null;
-                usuarioQueVaiSerSeguido = papa.getUsuario(palavras[2]);
-                if(usuarioQueVaiSerSeguido == null)
-                    continue;
 
-                usuarioQueVaiSeguir.seguir(usuarioQueVaiSerSeguido);
-                
-            }
+            System.out.println("Olá " + usuario.getNome() + " te damos as boas vindas!");
+            System.out.println("Digite help para ver os comandos");
+            usuario.setLogado(true);
 
-            else if(input.equals("help")){
-                System.out.println("""
-                        COMANDOS:
-                        - Postagem: <nome do usuario> -> <messagem>
-                        - Leitura: mural <nome do usuário>
-                        - Seguir: <nome do usuário> segue <outro usuário>
-                        - help
-                        - sair
-                        """);
-            }
+            String input = "";
 
-            else if(input.equals("sair")){
-                sair = true;
+
+
+
+            while (!input.equals("sair")) {
+                System.out.print("\n>");
+                input = sc.nextLine();
+
+                String[] palavras = input.split(" ");
+
+                if (palavras.length > 2 && palavras[1].equals("->")) {
+                    String nomeUsuario = palavras[0];
+                    if (papa.getUsuario(nomeUsuario) == null)
+                        continue;
+                    papa.postar(nomeUsuario, input.replace(palavras[0] + " " + palavras[1] + " ", ""));
+
+
+                } else if (palavras.length == 2 && palavras[0].equals("mural")) {
+                    String nomeUsuario = palavras[1];
+                    if (papa.getUsuario(nomeUsuario) == null)
+                        continue;
+                    papa.verMural(nomeUsuario);
+
+
+                } else if (palavras.length == 3 && palavras[1].equals("segue")) {
+                    String quemVaiSeguir = palavras[0];
+                    String quemVaiSerSeguido = palavras[2];
+                    papa.seguir(quemVaiSeguir, quemVaiSerSeguido);
+
+
+                } else if(input.equals("listar")){
+                    papa.listarUsuarios();
+
+
+                } else if(palavras.length == 2 && palavras[0].equals("seguindo")){
+                    papa.listarSeguindo(palavras[1]);
+
+
+                } else if (input.equals("help")) {
+                    System.out.println("""
+                            COMANDOS:
+                            - Postagem: <nome do usuario> -> <messagem>
+                            - Leitura: mural <nome do usuário>
+                            - Seguir: <nome do usuário> segue <outro usuário>
+                            - Listar usuarios: listar
+                            - Ver quem um usuario está seguindo: seguindo <nome do usuario>
+                            - help
+                            - sair
+                            """);
+                }
+                papa.salvar();
             }
-            papa.salvar();
+            usuario.setLogado(false); //desloga usuario ao sair
+
         }
-
 
         sc.close();
 

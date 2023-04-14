@@ -18,7 +18,7 @@ public class Post implements Serializable {
     }
 
     public void lerPostagem(){
-        System.out.printf("%s --> %s (%d/%d/%d %d:%d)", autor.getNome(), texto, data.get(Calendar.DAY_OF_MONTH), data.get(Calendar.MONTH)+1, data.get(Calendar.YEAR), data.get(Calendar.HOUR_OF_DAY), data.get(Calendar.MINUTE));
+        System.out.printf("%s --> %s (%d/%d/%d %d:%d)\n", autor.getNome(), texto, data.get(Calendar.DAY_OF_MONTH), data.get(Calendar.MONTH)+1, data.get(Calendar.YEAR), data.get(Calendar.HOUR_OF_DAY), data.get(Calendar.MINUTE));
     }
 
     public String getTexto(){

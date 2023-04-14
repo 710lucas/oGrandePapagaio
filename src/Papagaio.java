@@ -12,7 +12,7 @@ public class Papagaio implements Serializable{
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
 
 
-    public void criarUsuario(String nome){
+    public boolean criarUsuario(String nome){
 
         //mesma coisa que for(int i = 0; i<usuarios.getSize(); i++){
         //Usuario usuario = usuarios.get(i);
@@ -20,12 +20,18 @@ public class Papagaio implements Serializable{
         for(Usuario usuario : usuarios){
             if(usuario.getNome().equals(nome)) {
                 System.out.println("Já existe um usuario com o mesmo nome, tente novamente");
-                return;
+                return false;
             }
+        }
+
+        if(nome.contains(" ")) {
+            System.out.println("Nome de usuário não pode possuir espaços");
+            return false;
         }
 
         usuarios.add(new Usuario(nome));
         System.out.println("Usuário adicionado com sucesso");
+        return true;
 
     }
 
@@ -40,18 +46,42 @@ public class Papagaio implements Serializable{
         return null;
     }
 
-    public void verMural(String nomeUsuario){
+    public void listarUsuarios(){
         for(Usuario usuario : usuarios){
-            if(usuario.getNome().equals(nomeUsuario)){
-                usuario.lerMural();
-                return;
-            }
+            System.out.println(usuario.getNome());
         }
-
-        System.out.println("Nenhum usuario encontrado com este nome");
     }
 
+    public void listarSeguindo(String nome){
+        try {
+            getUsuario(nome).verSeguidores();
+        } catch(NullPointerException e){
+            System.out.println("usuario não encontrado");
+        }
+    }
 
+    public void postar(String nome, String textoParaPostar){
+        getUsuario(nome).postar(textoParaPostar);
+    }
+
+    public void verMural(String nome){
+        getUsuario(nome).lerMural();
+    }
+
+    public void seguir(String nomeUsuarioQueVaiSeguir, String nomeUsuarioQueVaiSerSeguido){
+
+        if(getUsuario(nomeUsuarioQueVaiSeguir) == null) {
+            System.out.println("usuario " + nomeUsuarioQueVaiSeguir + " não foi encontrado");
+            return;
+        }
+
+        if(getUsuario(nomeUsuarioQueVaiSerSeguido) == null){
+            System.out.println("usuario "+ nomeUsuarioQueVaiSerSeguido + " não foi encontrado");
+            return;
+        }
+
+        getUsuario(nomeUsuarioQueVaiSeguir).seguir(getUsuario(nomeUsuarioQueVaiSerSeguido));
+    }
 
     //não é necessário mas eu quero salvar em arquivos então pode so ignorar isso
     public Papagaio carregaPapagaios(){
@@ -74,6 +104,7 @@ public class Papagaio implements Serializable{
             throw new RuntimeException(e);
         }
     }
+
 
 
 }
