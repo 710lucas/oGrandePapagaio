@@ -7,11 +7,13 @@ public class Testes {
 
     Post post;
     Usuario usuario;
+    Papagaio papag;
 
     @BeforeEach
     public void init(){
         usuario = new Usuario("teste");
         post = new Post("teste", usuario);
+        papag = new Papagaio();
     }
 
     @Test
@@ -29,5 +31,23 @@ public class Testes {
         usuario.seguir(teste);
         Assertions.assertTrue(post.getAutor().getSeguindo().contains(teste));
     }
+
+    @Test
+    public void testeLogar(){
+        Assertions.assertFalse(usuario.isLogado());
+        usuario.setLogado(true);
+        Assertions.assertTrue(usuario.isLogado());
+    }
+
+    @Test
+    public void testPapagaio(){
+
+        Assertions.assertTrue(papag.criarUsuario("teste"));
+        Assertions.assertEquals(papag.getUsuario("teste").getNome(), "teste");
+        papag.getUsuario("teste").setLogado(true);
+        papag.postar("teste", "teste texto");
+        Assertions.assertEquals(1, papag.getUsuario("teste").getPostagens().size());
+    }
+
 
 }
