@@ -84,4 +84,8 @@ public class Usuario implements Serializable {
     public void setLogado(boolean logado) {
         this.logado = logado;
     }
+
+    public ArrayList<Usuario> getSeguindo(){
+        return seguindo;
+    }
 }

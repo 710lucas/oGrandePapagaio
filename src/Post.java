@@ -33,5 +33,9 @@ public class Post implements Serializable {
         return data;
     }
 
+    public void setTexto(String texto){
+        this.texto = texto;
+    }
+
 
 }
